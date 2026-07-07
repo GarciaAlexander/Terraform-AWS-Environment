@@ -39,3 +39,9 @@ variable "ec2_instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+variable "ssh_allowed_ip" {
+  description = "IP allowed to SSH into EC2"
+  type        = string
+  default     = "0.0.0.0/0" # placeholder, NOT used in production
+}

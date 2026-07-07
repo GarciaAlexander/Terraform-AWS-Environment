@@ -112,3 +112,83 @@ resource "aws_route_table_association" "private_assoc" {
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
 }
+
+############################################
+# Security Group for EC2 (Private Subnet)
+############################################
+resource "aws_security_group" "ec2_sg" {
+  name        = "${var.project_name}-${var.environment}-ec2-sg"
+  description = "Security group for private EC2 instance"
+  vpc_id      = aws_vpc.main.id
+
+  # Allow outbound traffic (default behavior)
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-ec2-sg"
+  }
+}
+
+############################################
+# Security Group for SSH Access (Optional)
+############################################
+resource "aws_security_group" "ssh_sg" {
+  name        = "${var.project_name}-${var.environment}-ssh-sg"
+  description = "Allows SSH access from your IP"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "SSH access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_allowed_ip]
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-ssh-sg"
+  }
+}
+
+############################################
+# IAM Role for EC2 (S3 Logging Later)
+############################################
+resource "aws_iam_role" "ec2_role" {
+  name = "${var.project_name}-${var.environment}-ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "${var.project_name}-${var.environment}-ec2-profile"
+  role = aws_iam_role.ec2_role.name
+}
+
+############################################
+# EC2 Instance (Private Subnet)
+############################################
+resource "aws_instance" "private_ec2" {
+  ami                    = "ami-0c02fb55956c7d316" # Amazon Linux 2 (us-east-1)
+  instance_type          = var.ec2_instance_type
+  subnet_id              = aws_subnet.private[0].id
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-private-ec2"
+  }
+}
