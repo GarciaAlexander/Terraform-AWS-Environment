@@ -55,8 +55,12 @@ AWS VPC
 
 Remote state:  
 - S3 bucket: `terraform-aws-env-state`  
-- DynamoDB table: `terraform-aws-env-locks`  
+- DynamoDB table: `terraform-aws-env-locks`
 
+
+## 🖼️ Architecture Diagram (Visual)
+
+![AWS Terraform Architecture](assets/architecture-diagram.png)
 
 ## 🧩 Key Features
 
