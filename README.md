@@ -43,15 +43,15 @@ This project solves those problems using industry best practices.
 
 ## 🏗️ Architecture Diagram (Conceptual)
 
-AWS VPC  
-├── Public Subnets  
-│   ├── NAT Gateway  
-│   └── Internet Gateway  
-│  
-├── Private Subnets  
-│   └── EC2 Instance (no public IP)  
-│  
-└── S3 Logging Bucket  
+    AWS VPC  
+    ├── Public Subnets  
+    │   ├── NAT Gateway  
+    │   └── Internet Gateway  
+    │  
+    ├── Private Subnets  
+    │   └── EC2 Instance (no public IP)  
+    │  
+    └── S3 Logging Bucket  
 
 Remote state:  
 - S3 bucket: `terraform-aws-env-state`  
@@ -74,7 +74,7 @@ VPC with public/private subnets, IGW, NAT, and proper routing.
 EC2 instance deployed in a private subnet with outbound-only internet access.
 
 ### 🔹 IAM Best Practices  
-EC2 uses an IAM role — no access keys stored on the instance.
+EC2 uses an IAM role; no access keys stored on the instance.
 
 ### 🔹 Centralized Logging  
 Dedicated S3 bucket for logs with encryption + versioning.
@@ -144,10 +144,33 @@ Add this inside the file:
 **Alexander Garcia**  
 AWS CloudOps Engineer • Terraform • Infrastructure-as-Code
 
+## 🔮 Future Enhancements
+
+- Add ALB + Auto Scaling Group for production workloads  
+- Add RDS or DynamoDB module for application data  
+- Add VPC Flow Logs + CloudWatch log aggregation  
+- Add Terraform Cloud or GitHub Actions CI/CD  
+- Add multi-account support (dev/staging/prod via AWS Organizations)  
+- Add KMS encryption for all resources  
+
+## 📸 Screenshots (Environment Visuals)
+
+### Remote State – S3
+![Remote State S3](assets/remote-state-s3.png)
+
+### Remote State – DynamoDB Lock Table
+![Remote State DynamoDB](assets/remote-state-dynamodb.png)
+
+### VPC Overview
+![VPC Overview](assets/vpc-overview.png)
+
+### Private EC2 Instance
+![EC2 Private Instance](assets/ec2-private-instance.png)
+
 
 ## 🏁 Final Notes
 
-This project demonstrates real CloudOps skills:
+This project showcases hands-on DevOps and CloudOps experience:
 
 - secure architecture  
 - Terraform best practices  
